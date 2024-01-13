@@ -9,6 +9,7 @@ import org.springframework.security.authentication.event.AuthenticationFailureBa
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +22,7 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        http
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/error", "/login-error", "/logout", "/css/**").permitAll();
                     authConfig.requestMatchers(HttpMethod.POST, "/createUser").permitAll();
@@ -29,6 +30,11 @@ public class SecurityConfig {
                     authConfig.requestMatchers(HttpMethod.GET, "/admin").hasAuthority("ADMIN");
                     authConfig.requestMatchers(HttpMethod.GET, "/roles").hasAuthority("ADMIN");
                     authConfig.requestMatchers(HttpMethod.GET, "/events").hasAnyAuthority("USER", "ADMIN");
+                    authConfig.requestMatchers(HttpMethod.GET, "/events/**").hasAnyAuthority("USER", "ADMIN");
+                    authConfig.requestMatchers(HttpMethod.GET, "/eventCategories").hasAnyAuthority("USER", "ADMIN");
+                    authConfig.requestMatchers(HttpMethod.GET, "/eventCategories/create").hasAnyAuthority("USER", "ADMIN");
+                    authConfig.requestMatchers(HttpMethod.GET, "/tags").hasAnyAuthority("USER", "ADMIN");
+                    authConfig.requestMatchers(HttpMethod.GET, "/tags/create").hasAnyAuthority("USER", "ADMIN");
                     authConfig.requestMatchers(HttpMethod.GET, "/developer").hasAuthority("DEVELOPER");
                     authConfig.requestMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN", "DEVELOPER");
                     authConfig.requestMatchers(HttpMethod.GET, "/authorities").hasAnyAuthority("ADMIN", "DEVELOPER");
