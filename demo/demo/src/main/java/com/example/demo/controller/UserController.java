@@ -5,8 +5,7 @@ import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +25,20 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public UserDto getUserById(@PathVariable Integer id){
-        return userService.getUserById(id);
+    public String getUserById(@PathVariable Integer id, Model model){
+        UserDto userDtos = userService.getUserById(id);
+        model.addAttribute("title", "Users");
+        model.addAttribute("users", userDtos);
+        return "users";
+    }
+
+    @GetMapping("/users/delete/{id}")
+    @PostMapping("/users/delete/{id}")
+    public String delete(@PathVariable Integer id, Model model){
+        userService.deleteUser(id);
+        model.addAttribute("title", "Users");
+        List<UserDto> userDtos = userService.getAllUsers();
+        model.addAttribute("users", userDtos);
+        return "users";
     }
 }

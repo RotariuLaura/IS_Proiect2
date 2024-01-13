@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService{
         return userMapper.userEntityToDto(userRepository.save(user));
     }
 
-    public void deleteUser(User user){
-        userRepository.delete(user);
+    public void deleteUser(Integer id){
+        userRepository.delete(userRepository.findById(id).orElse(null));
     }
 }

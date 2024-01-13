@@ -37,6 +37,8 @@ public class SecurityConfig {
                     authConfig.requestMatchers(HttpMethod.GET, "/tags/create").hasAnyAuthority("USER", "ADMIN");
                     authConfig.requestMatchers(HttpMethod.GET, "/developer").hasAuthority("DEVELOPER");
                     authConfig.requestMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN", "DEVELOPER");
+                    authConfig.requestMatchers(HttpMethod.GET, "/users/{id}").hasAnyAuthority("ADMIN");
+                    authConfig.requestMatchers(HttpMethod.GET, "/users/delete/{id}").hasAnyAuthority("ADMIN");
                     authConfig.requestMatchers(HttpMethod.GET, "/authorities").hasAnyAuthority("ADMIN", "DEVELOPER");
                     authConfig.anyRequest().authenticated();
                 })
